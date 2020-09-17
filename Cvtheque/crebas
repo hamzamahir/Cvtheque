@@ -1,0 +1,204 @@
+/*==============================================================*/
+/* DBMS name:      ORACLE Version 11g                           */
+/* Created on:     07/09/2020 16:03:10                          */
+/*==============================================================*/
+
+
+alter table "Competences"
+   drop constraint FK_COMPETEN_ASSOCIATI_CANDIDAT;
+
+alter table "ExperienceProfessionnelle"
+   drop constraint FK_EXPERIEN_ASSOCIATI_CANDIDAT;
+
+alter table "FormationEtDiplomes"
+   drop constraint FK_FORMATIO_ASSOCIATI_CANDIDAT;
+
+alter table "Loisirs"
+   drop constraint FK_LOISIRS_ASSOCIATI_CANDIDAT;
+
+alter table "association5"
+   drop constraint FK_ASSOCIAT_ASSOCIATI_CANDIDAT;
+
+alter table "association5"
+   drop constraint FK_ASSOCIAT_ASSOCIATI_LANGUES;
+
+drop table "Candidat" cascade constraints;
+
+drop index ASSOCIATION3_FK;
+
+drop table "Competences" cascade constraints;
+
+drop index ASSOCIATION2_FK;
+
+drop table "ExperienceProfessionnelle" cascade constraints;
+
+drop index ASSOCIATION1_FK;
+
+drop table "FormationEtDiplomes" cascade constraints;
+
+drop table "Langues" cascade constraints;
+
+drop index ASSOCIATION4_FK;
+
+drop table "Loisirs" cascade constraints;
+
+drop index ASSOCIATION5_FK2;
+
+drop index ASSOCIATION5_FK;
+
+drop table "association5" cascade constraints;
+
+/*==============================================================*/
+/* Table: "Candidat"                                            */
+/*==============================================================*/
+create table "Candidat" 
+(
+   "idCd"               INTEGER              not null,
+   "sitFamiliale"       VARCHAR2(254),
+   "nom"                VARCHAR2(254),
+   "prenom"             VARCHAR2(254),
+   "dtNaissance"        TIMESTAMP,
+   "telephone"          VARCHAR2(254),
+   "email"              VARCHAR2(254),
+   "photo"              BLOB,
+   "Adresse"            CHAR(10),
+   constraint PK_CANDIDAT primary key ("idCd")
+);
+
+/*==============================================================*/
+/* Table: "Competences"                                         */
+/*==============================================================*/
+create table "Competences" 
+(
+   "idCmp"              INTEGER              not null,
+   "idCd"               INTEGER              not null,
+   "intituleCmp"        VARCHAR2(254),
+   constraint PK_COMPETENCES primary key ("idCmp")
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION3_FK                                       */
+/*==============================================================*/
+create index ASSOCIATION3_FK on "Competences" (
+   "idCd" ASC
+);
+
+/*==============================================================*/
+/* Table: "ExperienceProfessionnelle"                           */
+/*==============================================================*/
+create table "ExperienceProfessionnelle" 
+(
+   "idExp"              INTEGER              not null,
+   "idCd"               INTEGER              not null,
+   "poste"              VARCHAR2(254),
+   "etabPoste"          VARCHAR2(254),
+   "periode"            INTEGER,
+   "villePoste"         VARCHAR2(254),
+   constraint PK_EXPERIENCEPROFESSIONNELLE primary key ("idExp")
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION2_FK                                       */
+/*==============================================================*/
+create index ASSOCIATION2_FK on "ExperienceProfessionnelle" (
+   "idCd" ASC
+);
+
+/*==============================================================*/
+/* Table: "FormationEtDiplomes"                                 */
+/*==============================================================*/
+create table "FormationEtDiplomes" 
+(
+   "idDiplome"          INTEGER              not null,
+   "idCd"               INTEGER              not null,
+   "diplome"            VARCHAR2(254),
+   "etablissementDiplome" VARCHAR2(254),
+   "anneeObt"           INTEGER,
+   "villeDiplome"       VARCHAR2(254),
+   constraint PK_FORMATIONETDIPLOMES primary key ("idDiplome")
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION1_FK                                       */
+/*==============================================================*/
+create index ASSOCIATION1_FK on "FormationEtDiplomes" (
+   "idCd" ASC
+);
+
+/*==============================================================*/
+/* Table: "Langues"                                             */
+/*==============================================================*/
+create table "Langues" 
+(
+   "idLangue"           INTEGER              not null,
+   "intituleLangue"     VARCHAR2(254),
+   "niveau"             VARCHAR2(254),
+   constraint PK_LANGUES primary key ("idLangue")
+);
+
+/*==============================================================*/
+/* Table: "Loisirs"                                             */
+/*==============================================================*/
+create table "Loisirs" 
+(
+   "idLoisirs"          INTEGER              not null,
+   "idCd"               INTEGER              not null,
+   "intittuleLoisirs"   VARCHAR2(254),
+   constraint PK_LOISIRS primary key ("idLoisirs")
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION4_FK                                       */
+/*==============================================================*/
+create index ASSOCIATION4_FK on "Loisirs" (
+   "idCd" ASC
+);
+
+/*==============================================================*/
+/* Table: "association5"                                        */
+/*==============================================================*/
+create table "association5" 
+(
+   "idCd"               INTEGER              not null,
+   "idLangue"           INTEGER              not null,
+   constraint PK_ASSOCIATION5 primary key ("idCd", "idLangue")
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION5_FK                                       */
+/*==============================================================*/
+create index ASSOCIATION5_FK on "association5" (
+   "idCd" ASC
+);
+
+/*==============================================================*/
+/* Index: ASSOCIATION5_FK2                                      */
+/*==============================================================*/
+create index ASSOCIATION5_FK2 on "association5" (
+   "idLangue" ASC
+);
+
+alter table "Competences"
+   add constraint FK_COMPETEN_ASSOCIATI_CANDIDAT foreign key ("idCd")
+      references "Candidat" ("idCd");
+
+alter table "ExperienceProfessionnelle"
+   add constraint FK_EXPERIEN_ASSOCIATI_CANDIDAT foreign key ("idCd")
+      references "Candidat" ("idCd");
+
+alter table "FormationEtDiplomes"
+   add constraint FK_FORMATIO_ASSOCIATI_CANDIDAT foreign key ("idCd")
+      references "Candidat" ("idCd");
+
+alter table "Loisirs"
+   add constraint FK_LOISIRS_ASSOCIATI_CANDIDAT foreign key ("idCd")
+      references "Candidat" ("idCd");
+
+alter table "association5"
+   add constraint FK_ASSOCIAT_ASSOCIATI_CANDIDAT foreign key ("idCd")
+      references "Candidat" ("idCd");
+
+alter table "association5"
+   add constraint FK_ASSOCIAT_ASSOCIATI_LANGUES foreign key ("idLangue")
+      references "Langues" ("idLangue");
+
